@@ -1,11 +1,7 @@
 ﻿@{
     ViewBag.Title = "Anulación Masiva de Órdenes de Trabajo";
-    Layout = "~/Views/Shared/_Layout.cshtml";  // usa tu layout
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!-- Requeridos en el layout (versiones que pediste):
-     Bootstrap 3.3.7 CSS/JS, jQuery 1.12.4, DataTables 1.10.13 (CSS/JS),
-     jQuery UI 1.12.x para datepicker (o tu datepicker preferido) -->
 
 <div class="container">
     <h3 class="text-center" style="margin-top:15px; font-weight:600;">
@@ -18,9 +14,7 @@
     </ul>
 
     <div class="tab-content" style="border:1px solid #ddd; border-top:none; padding:15px;">
-        <!-- TAB 1: Por Búsqueda -->
         <div class="tab-pane active" id="tabBusqueda">
-
             <form id="frmFiltros" class="form-horizontal" role="form" onsubmit="return false;">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Estado de Órdenes:</label>
@@ -77,7 +71,6 @@
 
         </div>
 
-        <!-- TAB 2: Por Archivo Excel (placeholder) -->
         <div class="tab-pane" id="tabExcel">
             <p class="text-muted">(Segunda etapa: carga por Excel)</p>
         </div>
@@ -86,13 +79,27 @@
 
 @section scripts{
     <script type="text/javascript">
-    (function () {
-        // Datepickers (jQuery UI; adapta si usas otro)
-        $("#dtpFechaInicio, #dtpFechaFin").datepicker({
-            dateFormat: "dd/mm/yy"
-        });
+    // Espera DOM listo (evita correr antes de tiempo)
+    $(function () {
 
-        // DataTable
+        // --- Datepicker (Bootstrap Datepicker) ---
+        if (!$.fn.datepicker) {
+            console.error("Bootstrap Datepicker no está cargado. Revisa el _Layout.");
+        } else {
+            $('#dtpFechaInicio, #dtpFechaFin').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+        // --- DataTable (requiere DataTables 1.10.13 cargado en Layout) ---
+        if (!$.fn.DataTable) {
+            console.error("DataTables no está cargado. Revisa el _Layout.");
+            return;
+        }
+
         var dt = $("#tblOrdenes").DataTable({
             paging: true,
             searching: false,
@@ -100,17 +107,16 @@
             ordering: false,
             autoWidth: false,
             language: {
-                url: "//cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                url: "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
             },
-            data: [], // inicia vacío
+            data: [],
             columns: [
                 {
                     data: null,
                     orderable: false,
                     width: "30px",
                     className: "text-center",
-                    render: function (data, type, row, meta) {
-                        // data.NumeroOrden se usa como ID lógico
+                    render: function (data, type, row) {
                         return '<input type="checkbox" class="row-check" data-id="' + row.NumeroOrden + '"/>';
                     }
                 },
@@ -123,7 +129,6 @@
         // Checkbox global
         $("#chkAll").on("change", function () {
             var checked = this.checked;
-            // Solo filas visibles/filtradas
             $("#tblOrdenes").find("input.row-check").prop("checked", checked);
         });
 
@@ -137,7 +142,7 @@
             };
 
             $.ajax({
-                url: "@Url.Action("Buscar", "AnulacionMasiva")",
+                url: '@Url.Action("Buscar", "AnulacionMasiva")',
                 type: "POST",
                 data: payload,
                 success: function (r) {
@@ -154,7 +159,7 @@
             });
         });
 
-        // Cancelar: limpiar filtros y tabla
+        // Cancelar
         $("#btnCancelar").on("click", function () {
             $("#cboEstado").val("Todos");
             $("#txtRolCreador").val("");
@@ -164,7 +169,7 @@
             dt.clear().draw();
         });
 
-        // Anular (stub Primera ETAPA)
+        // Anular (stub)
         $("#btnAnular").on("click", function () {
             var seleccionadas = [];
             $("#tblOrdenes").find("input.row-check:checked").each(function () {
@@ -177,9 +182,9 @@
             }
 
             $.ajax({
-                url: "@Url.Action("Anular", "AnulacionMasiva")",
+                url: '@Url.Action("Anular", "AnulacionMasiva")',
                 type: "POST",
-                traditional: true, // para enviar arrays simples en jQuery 1.12
+                traditional: true,
                 data: { numerosOrden: seleccionadas },
                 success: function (r) {
                     if (r && r.ok) {
@@ -191,6 +196,6 @@
                 error: function () { alert("Error al anular."); }
             });
         });
-    })();
+    });
     </script>
 }
