@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "Anulación Masiva de Órdenes de Trabajo";
+    Layout = "~/Views/Shared/_Layout.cshtml";  // usa tu layout
+}
+
+<!-- Requeridos en el layout (versiones que pediste):
+     Bootstrap 3.3.7 CSS/JS, jQuery 1.12.4, DataTables 1.10.13 (CSS/JS),
+     jQuery UI 1.12.x para datepicker (o tu datepicker preferido) -->
+
+<div class="container">
+    <h3 class="text-center" style="margin-top:15px; font-weight:600;">
+        ANULACION MASIVA DE ORDENES DE TRABAJO
+    </h3>
+
+    <ul class="nav nav-tabs" style="margin-top:15px;">
+        <li class="active"><a href="#tabBusqueda" data-toggle="tab">Por Búsqueda</a></li>
+        <li><a href="#tabExcel" data-toggle="tab">Por Archivo Excel</a></li>
+    </ul>
+
+    <div class="tab-content" style="border:1px solid #ddd; border-top:none; padding:15px;">
+        <!-- TAB 1: Por Búsqueda -->
+        <div class="tab-pane active" id="tabBusqueda">
+
+            <form id="frmFiltros" class="form-horizontal" role="form" onsubmit="return false;">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Estado de Órdenes:</label>
+                    <div class="col-sm-4">
+                        <select id="cboEstado" class="form-control">
+                            <option>Todos</option>
+                            <option>Requerimiento</option>
+                            <option>Devuelto</option>
+                        </select>
+                    </div>
+
+                    <label class="col-sm-2 control-label">Rol Creador:</label>
+                    <div class="col-sm-4">
+                        <input id="txtRolCreador" type="text" class="form-control" maxlength="20" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Desde:</label>
+                    <div class="col-sm-4">
+                        <input id="dtpFechaInicio" type="text" class="form-control" placeholder="dd/mm/aaaa" />
+                    </div>
+
+                    <label class="col-sm-2 control-label">Hasta:</label>
+                    <div class="col-sm-4">
+                        <input id="dtpFechaFin" type="text" class="form-control" placeholder="dd/mm/aaaa" />
+                    </div>
+                </div>
+
+                <div class="form-group text-center" style="margin-top:10px;">
+                    <button id="btnBuscar" class="btn btn-primary" type="button">Buscar</button>
+                    <button id="btnCancelar" class="btn btn-default" type="button">Cancelar</button>
+                    <button id="btnAnular" class="btn btn-danger" type="button">Anular</button>
+                </div>
+            </form>
+
+            <hr />
+
+            <div class="table-responsive">
+                <table id="tblOrdenes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="width:30px; text-align:center;">
+                                <input type="checkbox" id="chkAll" />
+                            </th>
+                            <th>Número de Orden</th>
+                            <th>Tipo Orden</th>
+                            <th>Número de Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- TAB 2: Por Archivo Excel (placeholder) -->
+        <div class="tab-pane" id="tabExcel">
+            <p class="text-muted">(Segunda etapa: carga por Excel)</p>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+    (function () {
+        // Datepickers (jQuery UI; adapta si usas otro)
+        $("#dtpFechaInicio, #dtpFechaFin").datepicker({
+            dateFormat: "dd/mm/yy"
+        });
+
+        // DataTable
+        var dt = $("#tblOrdenes").DataTable({
+            paging: true,
+            searching: false,
+            info: true,
+            ordering: false,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+            },
+            data: [], // inicia vacío
+            columns: [
+                {
+                    data: null,
+                    orderable: false,
+                    width: "30px",
+                    className: "text-center",
+                    render: function (data, type, row, meta) {
+                        // data.NumeroOrden se usa como ID lógico
+                        return '<input type="checkbox" class="row-check" data-id="' + row.NumeroOrden + '"/>';
+                    }
+                },
+                { data: "NumeroOrden" },
+                { data: "TipoOrden" },
+                { data: "NumeroCliente" }
+            ]
+        });
+
+        // Checkbox global
+        $("#chkAll").on("change", function () {
+            var checked = this.checked;
+            // Solo filas visibles/filtradas
+            $("#tblOrdenes").find("input.row-check").prop("checked", checked);
+        });
+
+        // Buscar
+        $("#btnBuscar").on("click", function () {
+            var payload = {
+                estado: $("#cboEstado").val(),
+                rolCreador: $("#txtRolCreador").val(),
+                fechaInicio: $("#dtpFechaInicio").val(),
+                fechaFin: $("#dtpFechaFin").val()
+            };
+
+            $.ajax({
+                url: "@Url.Action("Buscar", "AnulacionMasiva")",
+                type: "POST",
+                data: payload,
+                success: function (r) {
+                    if (r && r.ok) {
+                        $("#chkAll").prop("checked", false);
+                        dt.clear();
+                        dt.rows.add(r.data);
+                        dt.draw();
+                    } else {
+                        alert("No se pudo obtener información.");
+                    }
+                },
+                error: function () { alert("Error en la consulta."); }
+            });
+        });
+
+        // Cancelar: limpiar filtros y tabla
+        $("#btnCancelar").on("click", function () {
+            $("#cboEstado").val("Todos");
+            $("#txtRolCreador").val("");
+            $("#dtpFechaInicio").val("");
+            $("#dtpFechaFin").val("");
+            $("#chkAll").prop("checked", false);
+            dt.clear().draw();
+        });
+
+        // Anular (stub Primera ETAPA)
+        $("#btnAnular").on("click", function () {
+            var seleccionadas = [];
+            $("#tblOrdenes").find("input.row-check:checked").each(function () {
+                seleccionadas.push($(this).data("id"));
+            });
+
+            if (seleccionadas.length === 0) {
+                alert("Seleccione al menos una orden.");
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("Anular", "AnulacionMasiva")",
+                type: "POST",
+                traditional: true, // para enviar arrays simples en jQuery 1.12
+                data: { numerosOrden: seleccionadas },
+                success: function (r) {
+                    if (r && r.ok) {
+                        alert("Órdenes enviadas a anulación: " + r.totalSeleccionadas);
+                    } else {
+                        alert("No se pudo procesar la anulación.");
+                    }
+                },
+                error: function () { alert("Error al anular."); }
+            });
+        });
+    })();
+    </script>
+}
