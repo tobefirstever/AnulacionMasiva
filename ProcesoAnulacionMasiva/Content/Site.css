@@ -24,12 +24,12 @@ textarea {
 }
 
 /* --- Mejoras UX/UI para DataTable --- */
-table.dataTable thead th {
+/*table.dataTable thead th {
     background-color: #337ab7;
     color: white;
     font-weight: 600;
     text-align: center;
-}
+}*/
 
 table.dataTable tbody tr:hover {
     background-color: #f5f5f5;
@@ -63,4 +63,201 @@ table.dataTable tbody tr:hover {
 .table input[type="checkbox"] {
     transform: scale(1.2);
     cursor: pointer;
+}
+
+/* Alertify + Bootstrap 3 look */
+/* --- Alertify + Bootstrap 3 harmony --- */
+.ajs-dialog {
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+
+.ajs-header {
+    background-color: #337ab7; /* primary BS3 */
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.ajs-content {
+    font-size: 14px;
+    color: #333;
+    padding: 18px 20px;
+}
+
+.ajs-footer {
+    padding: 10px 15px;
+    background: #f5f5f5; /* como .modal-footer */
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.ajs-buttons .btn { /* ya mapeados con defaults.theme.* */
+    min-width: 120px;
+    border-radius: 4px;
+}
+
+    .ajs-buttons .btn + .btn {
+        margin-left: 8px;
+    }
+
+/* Toasts con estética BS3 (alert-* like) */
+.ajs-message {
+    border-radius: 4px;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    padding: 10px 12px;
+}
+
+    .ajs-message.ajs-success {
+        background-color: #dff0d8;
+        color: #3c763d;
+        border-color: #d6e9c6;
+    }
+
+    .ajs-message.ajs-error {
+        background-color: #f2dede;
+        color: #a94442;
+        border-color: #ebccd1;
+    }
+
+    .ajs-message.ajs-warning {
+        background-color: #fcf8e3;
+        color: #8a6d3b;
+        border-color: #faebcc;
+    }
+
+    .ajs-message.ajs-info {
+        background-color: #d9edf7;
+        color: #31708f;
+        border-color: #bce8f1;
+    }
+
+/* Overlay más suave */
+.ajs-modal {
+    background: rgba(0,0,0,.35);
+}
+
+
+/* --- Card alrededor de la tabla --- */
+.table-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.06);
+    overflow: hidden;
+}
+
+    .table-card .dataTables_length,
+    .table-card .dataTables_filter {
+        padding: 12px 12px 0;
+    }
+
+    .table-card .dataTables_info,
+    .table-card .dataTables_paginate {
+        padding: 10px 12px 12px;
+    }
+
+/* --- Cabecera con look Bootstrap primary --- */
+.table thead th {
+    background: #337ab7;
+    color: #fff;
+    border-color: #2e6da4;
+    font-weight: 600;
+}
+
+    .table thead th.checkbox-cell {
+        width: 36px;
+        text-align: center;
+    }
+
+/* --- Celdas/filas --- */
+.table tbody td {
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background: #f7fbff;
+}
+
+/* --- Fila seleccionada (checkbox marcado) --- */
+/*.table tbody tr.row-selected {
+    background: #eaf5ff;
+}
+
+    .table tbody tr.row-selected td {
+        box-shadow: inset 0 0 0 9999px rgba(51,122,183,.08);
+    }*/
+
+/* --- Checkbox col centrada --- */
+#tblOrdenes .checkbox-cell, #tblOrdenes thead th.checkbox-cell {
+    text-align: center;
+    width: 36px;
+}
+
+/* --- Paginación más limpia --- */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #e9f2fb;
+    border-color: #2e6da4;
+    color: #23527c !important;
+}
+
+
+/* (Opcional) Cabecera fija cuando hay scroll vertical */
+.table-card table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+
+/* Atenuar selección de fila: acento lateral + fondo muy leve */
+.table tbody tr.row-selected {
+    background-color: #f7fbff; /* muy leve */
+}
+
+.table-striped > tbody > tr.row-selected:nth-of-type(odd) {
+    background-color: #f5faff; /* respeta zebra */
+}
+
+.table-striped > tbody > tr.row-selected:nth-of-type(even) {
+    background-color: #f9fcff;
+}
+
+/* Acento lateral (primary BS3) en la primera celda */
+.table tbody tr.row-selected td:first-child {
+    position: relative;
+}
+
+    .table tbody tr.row-selected td:first-child:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #337ab7;
+        border-radius: 3px 0 0 3px;
+    }
+
+/* QUITAR el “relleno azul total” previo si lo tenías */
+.table tbody tr.row-selected td {
+    box-shadow: none; /* antes metíamos un overlay */
+}
+
+.table input[type="checkbox"] {
+    transform: scale(1.15);
+    transform-origin: center;
+    vertical-align: middle;
+}
+
+.table-card table {
+    margin-bottom: 0;
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #f7fbff;
+    cursor: default;
 }

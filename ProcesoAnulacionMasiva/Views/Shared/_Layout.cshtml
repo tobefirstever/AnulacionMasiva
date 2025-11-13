@@ -56,6 +56,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
 
+
+    <!-- AlertifyJS (núcleo) -->
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <!-- Solo un tema: Bootstrap (armoniza con BS3) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+
+    <script>
+        // Notifier (toasts)
+        alertify.set('notifier', 'position', 'top-right');
+        alertify.set('notifier', 'delay', 4); // s
+
+        // Mapear botones e inputs a clases Bootstrap 3
+        alertify.defaults.theme.ok = "btn btn-success";
+        alertify.defaults.theme.cancel = "btn btn-danger";
+        alertify.defaults.theme.input = "form-control";
+
+        // Transición y textos por defecto
+        alertify.defaults.transition = "fade";  // smooth
+        alertify.defaults.glossary.ok = "Sí, anular";
+        alertify.defaults.glossary.cancel = "Cancelar";
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css" />
+    <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
