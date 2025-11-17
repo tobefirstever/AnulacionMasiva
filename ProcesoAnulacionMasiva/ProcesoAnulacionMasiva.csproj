@@ -127,12 +127,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AnulacionMasivaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ValidarExcelController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\LinqBatchExtensions.cs" />
     <Compile Include="Models\AnularManserResponseDto.cs" />
+    <Compile Include="Models\FiltrosOrdenVm.cs" />
     <Compile Include="Models\OrdenDto.cs" />
+    <Compile Include="Models\ValidacionItem.cs" />
+    <Compile Include="Models\ValidacionResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +145,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Scripts\index.js" />
+    <Content Include="Content\Scripts\validar-excel.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -173,6 +178,8 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\AnulacionMasiva\Index.cshtml" />
+    <Content Include="Views\Shared\_FiltrosBusqueda.cshtml" />
+    <Content Include="Views\ValidarExcel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

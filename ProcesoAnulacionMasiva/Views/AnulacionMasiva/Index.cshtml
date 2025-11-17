@@ -1,6 +1,11 @@
-﻿@{
+﻿@using ProcesoAnulacionMasiva.Models
+
+
+
+@{
     ViewBag.Title = "Anulación Masiva de Órdenes de Trabajo";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var filtros = new FiltrosOrdenVm();
 }
 
 <div id="buscar-orden" data-request-url="@Url.Action("Buscar", "AnulacionMasiva")"></div>
@@ -17,41 +22,21 @@
 
     <div class="tab-content" style="border:1px solid #ddd; border-top:none; padding:15px;">
         <div class="tab-pane active" id="tabBusqueda">
-            <form id="frmFiltros" class="form-horizontal" role="form" onsubmit="return false;">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Estado de Órdenes:</label>
-                    <div class="col-sm-4">
-                        <select id="cboEstado" class="form-control">
-                            <option>Todos</option>
-                            <option>Requerimiento</option>
-                            <option>Devuelto</option>
-                        </select>
-                    </div>
 
-                    <label class="col-sm-2 control-label">Rol Creador:</label>
-                    <div class="col-sm-4">
-                        <input id="txtRolCreador" type="text" class="form-control" maxlength="20" />
-                    </div>
-                </div>
+            <!-- TAB 1: Por Búsqueda -->
+            @{
+                var vdBusq = new ViewDataDictionary();
+                vdBusq["UseLegacyIds"] = true; // mantiene tus IDs actuales
+                vdBusq.TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "busq" };
+            }
+            @Html.Partial("_FiltrosBusqueda", filtros, vdBusq)
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Desde:</label>
-                    <div class="col-sm-4">
-                        <input id="dtpFechaInicio" type="text" class="form-control" placeholder="dd/mm/aaaa" />
-                    </div>
+            <div class="form-group text-center" style="margin-top:10px;">
+                <button id="btnBuscar" class="btn btn-primary" type="button">Buscar</button>
+                <button id="btnCancelar" class="btn btn-default" type="button">Cancelar</button>
+                <button id="btnAnular" class="btn btn-danger" type="button">Anular</button>
+            </div>
 
-                    <label class="col-sm-2 control-label">Hasta:</label>
-                    <div class="col-sm-4">
-                        <input id="dtpFechaFin" type="text" class="form-control" placeholder="dd/mm/aaaa" />
-                    </div>
-                </div>
-
-                <div class="form-group text-center" style="margin-top:10px;">
-                    <button id="btnBuscar" class="btn btn-primary" type="button">Buscar</button>
-                    <button id="btnCancelar" class="btn btn-default" type="button">Cancelar</button>
-                    <button id="btnAnular" class="btn btn-danger" type="button">Anular</button>
-                </div>
-            </form>
 
             <hr />
 
@@ -80,17 +65,97 @@
                     <tbody></tbody>
                 </table>
             </div>
+
+
+            @using (Html.BeginForm("AnularExcel", "AnulacionMasiva", FormMethod.Post, new { id = "frmAnularExcel", target = "_self" }))
+            {
+                @Html.Hidden("selectedCsv", "", new { id = "hfSelectedCsv" })
+            }
+
+
+        </div>
+        <!-- TAB 2: Por Archivo Excel -->
+        <div class="tab-pane" id="tabExcel">
+            @* Reutilizamos el partial de filtros, sin IDs globales *@
+            @{
+
+                var vdExcel = new ViewDataDictionary();
+                vdExcel["UseLegacyIds"] = false;
+                vdExcel.TemplateInfo = new System.Web.Mvc.TemplateInfo { HtmlFieldPrefix = "excel" };
+            }
+            @Html.Partial("_FiltrosBusqueda", filtros, vdExcel)
+
+            <!-- Botones Exportar/Cancelar centrados debajo de filtros -->
+            <div class="row">
+                <div class="col-sm-12 text-center mb15">
+                    <button type="button" class="btn btn-primary" data-action="exportar">Exportar</button>
+                    <button type="button" class="btn btn-default" data-action="cancelar">Cancelar</button>
+                </div>
+            </div>
+
+            <hr class="hr-soft" />
+
+            <!-- Sección archivo + botón Anular alineados-->
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="form-group file-picker">
+                        <label class="control-label">Seleccionar archivo:</label>
+
+                        <div class="input-group input-group-lg file-picker-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="excelFileName"
+                                   placeholder="Seleccione un archivo…"
+                                   readonly>
+
+                            <span class="input-group-btn">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        id="btnBrowseExcel"
+                                        title="Buscar archivo">
+                                    &hellip;
+                                </button>
+                            </span>
+                        </div>
+
+                        <!-- file real oculto -->
+                        <input type="file" id="excelReal" data-excel-file class="sr-only">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <label class="control-label hidden-xs">&nbsp;</label>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-danger btn-lg file-picker-anular" data-action="anular">
+                            Anular
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Form de envío para Excel (filtros + archivo) -->
+            @using (Html.BeginForm("AnularExcel", "AnulacionMasiva", FormMethod.Post,
+                   new { id = "frmUploadExcel", enctype = "multipart/form-data", target = "_self" }))
+            {
+                @Html.Hidden("Estado")
+                @Html.Hidden("RolCreador")
+                @Html.Hidden("FechaInicio")
+                @Html.Hidden("FechaFin")
+                <!-- Aquí clonaremos/moveremos el input file antes del submit (tu JS ya lo hace) -->
+                <input type="file" name="ArchivoExcel" id="hfExcelFile" style="display:none;" />
+            }
         </div>
 
-        <div class="tab-pane" id="tabExcel">
-            <p class="text-muted">(Segunda etapa: carga por Excel)</p>
-        </div>
+
+
     </div>
 
-    <!-- NUEVO: formulario oculto solo para descargar el Excel -->
-    <form id="frmAnularExcel" method="post" action="@Url.Action("AnularExcel","AnulacionMasiva")" style="display:none;">
-        <input type="hidden" id="hfSelectedCsv" name="selectedCsv" />
-    </form>
+  
+
+
+
+
 </div>
 
 

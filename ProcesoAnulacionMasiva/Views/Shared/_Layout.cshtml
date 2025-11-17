@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
 
-    @Styles.Render("~/Content/css")            @* Bootstrap + Site.css del template *@
+    @Styles.Render("~/Content/css")   
 
     <!-- DataTables 1.10.13 (CSS) -->
     <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -14,7 +14,7 @@
     <!-- Bootstrap Datepicker (CSS) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 
-    @Scripts.Render("~/bundles/modernizr")     @* Modernizr va en <head> *@
+    @Scripts.Render("~/bundles/modernizr")   
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -29,8 +29,8 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
+                    <li>@Html.ActionLink("RF1", "Index", "AnulacionMasiva")</li>
+                    <li>@Html.ActionLink("RF2", "Index", "ValidarExcel")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
                 </ul>
             </div>
@@ -46,8 +46,8 @@
     </div>
 
     <!-- ORDEN CORRECTO DE JS -->
-    @Scripts.Render("~/bundles/jquery")        @* jQuery del template *@
-    @Scripts.Render("~/bundles/bootstrap")     @* Bootstrap depende de jQuery *@
+    @Scripts.Render("~/bundles/jquery")       
+    @Scripts.Render("~/bundles/bootstrap")    
 
     <!-- DataTables 1.10.13 (JS) -->
     <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -60,21 +60,21 @@
     <!-- AlertifyJS (núcleo) -->
     <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
-    <!-- Solo un tema: Bootstrap (armoniza con BS3) -->
+   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
 
     <script>
-        // Notifier (toasts)
+      
         alertify.set('notifier', 'position', 'top-right');
         alertify.set('notifier', 'delay', 4); // s
 
-        // Mapear botones e inputs a clases Bootstrap 3
+   
         alertify.defaults.theme.ok = "btn btn-success";
         alertify.defaults.theme.cancel = "btn btn-danger";
         alertify.defaults.theme.input = "form-control";
 
-        // Transición y textos por defecto
+    
         alertify.defaults.transition = "fade";  // smooth
         alertify.defaults.glossary.ok = "Sí, anular";
         alertify.defaults.glossary.cancel = "Cancelar";

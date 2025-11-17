@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Validación de Excel de Órdenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h3 class="text-center" style="margin-top:15px; font-weight:600;">
+        VALIDAR EXCEL – ÓRDENES (1 columna: NumeroOrden)
+    </h3>
+
+    <div class="row" style="margin-top:20px;">
+        <div class="col-sm-9">
+            <div class="form-group file-picker">
+                <label class="control-label">Seleccionar archivo</label>
+                <div class="input-group input-group-lg file-picker-group">
+                    <input type="text" class="form-control" id="excelFileName" placeholder="Seleccione un archivo…" readonly>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" id="btnBrowseExcel" title="Buscar archivo">&hellip;</button>
+                    </span>
+                </div>
+                <input type="file" id="excelReal" class="sr-only" />
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label hidden-xs">&nbsp;</label>
+            <div class="form-group text-right">
+                <button type="button" id="btnValidar" class="btn btn-success btn-lg">
+                    Validar Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="hr-soft" />
+
+    <div id="resultadoPanel" class="table-card" style="display:none;">
+        <div class="row" style="padding:12px 12px 0;">
+            <div class="col-sm-12">
+                <span id="resumenValidacion" class="text-muted"></span>
+            </div>
+        </div>
+
+        <table id="tblResultado" class="table table-striped table-hover table-condensed" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Fila</th>
+                    <th>Número de Orden</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Content/Scripts/validar-excel.js"></script>
+}

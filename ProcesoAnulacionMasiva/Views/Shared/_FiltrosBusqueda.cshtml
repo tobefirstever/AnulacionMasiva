@@ -1,0 +1,56 @@
+﻿@model ProcesoAnulacionMasiva.Models.FiltrosOrdenVm
+@{
+    // Lee el flag de ViewBag de forma compatible con .NET 4.0
+    var useLegacyIds = (ViewBag.UseLegacyIds != null) ? (bool)ViewBag.UseLegacyIds : false;
+}
+
+@functions{
+    // Combina atributos anónimos con un id opcional
+    public static IDictionary<string, object> MergeAttrs(object attrs, bool addId, string idValue)
+    {
+        var dict = HtmlHelper.AnonymousObjectToHtmlAttributes(attrs);
+        if (addId && !string.IsNullOrEmpty(idValue))
+        {
+            dict["id"] = idValue;
+        }
+        return dict;
+    }
+}
+<div class="row filtros" data-filtros-root>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Estado de Órdenes:</label>
+            @Html.DropDownListFor(
+                m => m.Estado,
+                new SelectList(new[] { "Todos", "Requerimiento", "Devuelto" }),
+                MergeAttrs(new { @class = "form-control", data_filter = "estado" }, useLegacyIds, "cboEstado")
+            )
+        </div>
+
+        <div class="form-group">
+            <label>Desde:</label>
+            @Html.TextBoxFor(
+                m => m.FechaInicio,
+                MergeAttrs(new { @class = "form-control", placeholder = "dd/mm/aaaa", data_filter = "desde", data_datepicker = "1" }, useLegacyIds, "dtpFechaInicio")
+            )
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Rol Creador:</label>
+            @Html.TextBoxFor(
+                m => m.RolCreador,
+                MergeAttrs(new { @class = "form-control", data_filter = "rol" }, useLegacyIds, "txtRolCreador")
+            )
+        </div>
+
+        <div class="form-group">
+            <label>Hasta:</label>
+            @Html.TextBoxFor(
+                m => m.FechaFin,
+                MergeAttrs(new { @class = "form-control", placeholder = "dd/mm/aaaa", data_filter = "hasta", data_datepicker = "1" }, useLegacyIds, "dtpFechaFin")
+            )
+        </div>
+    </div>
+</div>

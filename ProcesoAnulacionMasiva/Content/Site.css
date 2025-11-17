@@ -261,3 +261,122 @@ table.dataTable tbody tr:hover {
     background-color: #f7fbff;
     cursor: default;
 }
+
+/* separadores y espaciados suaves (Bootstrap 3 no trae utilities) */
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mb15 {
+    margin-bottom: 15px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.hr-soft {
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* input-group grande: que el botón no se vea diminuto */
+.input-group-lg .btn {
+    padding: 10px 16px;
+}
+
+/* armonía general del panel excel */
+#tabExcel .form-group label {
+    font-weight: 600;
+}
+
+/* ===== File picker estilizado (BS3) ===== */
+.file-picker-group .form-control {
+    height: 44px; /* igualar alturas */
+    border-color: #cfd9e3;
+    box-shadow: none;
+}
+
+.file-picker-group .btn {
+    height: 44px;
+    border-color: #cfd9e3;
+}
+
+    .file-picker-group .btn:focus,
+    .file-picker-group .btn:active,
+    .file-picker-group .btn:hover {
+        background: #f7f9fc;
+        border-color: #b9c7d6;
+    }
+
+.file-picker-anular { /* separación sutil respecto al input-group */
+    margin-left: 10px;
+}
+
+/* utilidades */
+.sr-only { /* ocultar input file real, accesible */
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+/* 1) Anular el límite heredado del template MVC dentro de los tabs */
+#tabExcel input,
+#tabExcel select,
+#tabExcel textarea,
+#tabBusqueda input,
+#tabBusqueda select,
+#tabBusqueda textarea {
+    max-width: 100%; /* <-- clave */
+}
+
+/* 2) El input-group debe ocupar todo el ancho (input + botón unidos) */
+#tabExcel .file-picker-group {
+    width: 100%;
+}
+
+    #tabExcel .file-picker-group .form-control {
+        width: 100%;
+    }
+
+/* 3) Alturas iguales y bordes coherentes */
+.file-picker-group .form-control {
+    height: 44px;
+    border-color: #cfd9e3;
+    box-shadow: none;
+}
+
+.file-picker-group .btn {
+    height: 44px;
+    border-color: #cfd9e3;
+}
+
+    .file-picker-group .btn:focus,
+    .file-picker-group .btn:active,
+    .file-picker-group .btn:hover {
+        background: #f7f9fc;
+        border-color: #b9c7d6;
+    }
+
+/* 4) Alineación del botón Anular (sin empujar la fila) */
+.file-picker-anular {
+    margin-left: 0;
+}
+/* si tenías margen, quítalo */
+
+/* 5) Utilidad para ocultar el file real (accesible) */
+.sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
